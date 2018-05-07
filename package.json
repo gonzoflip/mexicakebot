@@ -1,0 +1,26 @@
+{
+  "name": "crypto-bot",
+  "description": "Telegram bot that allows integration with untappd",
+  "version": "0.0.1",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "fs": "0.0.1-security",
+    "telebot": "^1.2.3",
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gonzoflip/untappd-telegrambot.git"
+  },
+  "author": "Benjamin Gentry <bwgentry1@gmail.com> (http://github.com/gonzoflip)",
+  "license": "Apache",
+  "bugs": {
+    "url": "https://github.com/gonzoflip/untappd-telegrambot/issues"
+  },
+  "homepage": "https://github.com/gonzoflip/untappd-telegrambot#readme"
+}
