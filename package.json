@@ -18,7 +18,7 @@
     "url": "git+https://github.com/gonzoflip/untappd-telegrambot.git"
   },
   "author": "Benjamin Gentry <bwgentry1@gmail.com> (http://github.com/gonzoflip)",
-  "license": "Apache",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/gonzoflip/untappd-telegrambot/issues"
   },
