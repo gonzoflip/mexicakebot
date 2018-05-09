@@ -1,5 +1,5 @@
 {
-  "name": "crypto-bot",
+  "name": "untapps-telegrambot",
   "description": "Telegram bot that allows integration with untappd",
   "version": "0.0.1",
   "main": "bot.js",
@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "dotenv": "^5.0.1",
-    "fs": "0.0.1-security",
-    "telebot": "^1.2.3"
+    "node-telegram-bot-api": "^0.30.0",
+    "request-promise": "^4.2.2"
   },
   "devDependencies": {},
   "repository": {
