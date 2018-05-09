@@ -40,7 +40,6 @@ function beersearch(match, chatId) {
           console.log(err)
         })
         .then(beerinfo => {
-          console.log(beerinfo)
 	  bot.sendPhoto(chatId, beerinfo.beer_label_hd)
 	  bot.sendMessage(chatId, beerinfoformat(beerinfo))
         })
