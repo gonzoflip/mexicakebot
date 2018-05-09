@@ -21,7 +21,6 @@ bot.onText(/\/beer (.+)/, (msg, match) => {
 
 // beer search, this queries the untappd /search/beer api, grabs the "bid" of top the search result (based on checkins), 
 // and queries the /beer/info enpoint with the bid for the full info on the beer.
-// todo-- format results into human readable format
 function beersearch(match, chatId) {
     searchbeer(match)
       .then(function (body) {
