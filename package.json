@@ -1,5 +1,5 @@
 {
-  "name": "untapps-telegrambot",
+  "name": "untappd-telegrambot",
   "description": "Telegram bot that allows integration with untappd",
   "version": "0.0.1",
   "main": "bot.js",
