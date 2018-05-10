@@ -18,31 +18,60 @@ bot.onText(/\/beer (.+)/, (msg, match) => {
   beersearch(match, chatId)
 });
 
+bot.onText(/\/brewery (.+)/, (msg, match) => {
+  const chatId = msg.chat.id;
+  brewerySearch(match, chatId)
+});
 
-// beer search, this queries the untappd /search/beer api, grabs the "bid" of top the search result (based on checkins), 
+// beer search, this queries the untappd /search/beer api, grabs the "bid" of top the search result (based on checkins),
 // and queries the /beer/info enpoint with the bid for the full info on the beer.
 function beersearch(match, chatId) {
-    searchbeer(match)
+  searchbeer(match)
+    .then(function (body) {
+      return body.response.beers.items[0].beer.bid
+    })
+    .catch(function (err) {
+      console.log(err)
+	    bot.sendmessage(chatid, "your search returned no results, try to broaden your search terms")
+    })
+    .then(bid => beerLookup(bid))
       .then(function (body) {
-        return body.response.beers.items[0].beer.bid
+        var beerinfo = body.response.beer
+        return beerinfo
       })
       .catch(function (err) {
-        console.log(err)
-	bot.sendMessage(chatId, "Your search returned no results, try to broaden your search terms")
-      })
-      .then(bid => beerlookup(bid))
-        .then(function (body) {
-          var beerinfo = body.response.beer
-          return beerinfo
-        })
-        .catch(function (err) {
           console.log(err)
-        })
-        .then(beerinfo => {
-	  bot.sendPhoto(chatId, beerinfo.beer_label_hd)
-	  bot.sendMessage(chatId, beerinfoformat(beerinfo))
-        })
+      })
+      .then(beerInfo => {
+	      bot.sendPhoto(chatId, beerinfo.beer_label_hd)
+	      bot.sendMessage(chatId, beerinfoformat(beerinfo))
+      })
 };
+
+function brewerySearch(match, chatId) {
+  searchBrewery(match)
+    .then(function (body) {
+      console.log(body)
+      return body.response.brewery.items[0].brewery.brewery_id
+      console.log(body.response.brewery.items[0].brewery.brewery_id)
+    })
+    .catch(function (err) {
+      bot.sendMessage(chatId, "Your search returned no results, try to broaden your search terms")
+    })
+    .then(brewery_id => breweryLookup(brewery_id))
+      .then(function (body) {
+        var breweryInfo = body.response.brewery
+        return breweryInfo
+      })
+      .catch(function (err) {
+          console.log(err)
+      })
+      .then(breweryInfo => {
+	      bot.sendPhoto(chatId, breweryInfo.brewery_label)
+	      bot.sendMessage(chatId, breweryInfoFormat(breweryInfo))
+      })
+
+}
 
 function searchbeer(match) {
   var options = {
@@ -60,10 +89,40 @@ function searchbeer(match) {
   return rp(options)
 }
 
-
-function beerlookup(bid) {
+function beerLookup(bid) {
   var options = {
     uri: baseUrl +'/beer/info/' +bid,
+    qs: {
+      client_id: clientId,
+      client_secret: clientSecret,
+    },
+    headers: {
+     'User-Agent': 'Request-Promise'
+  },
+    json: true
+  };
+  return rp(options)
+}
+
+function searchBrewery(match) {
+  var options = {
+    uri: baseUrl +'/search/brewery',
+    qs: {
+      client_id: clientId,
+      client_secret: clientSecret,
+      q: match[1]
+    },
+    headers: {
+      'User-Agent': 'Request-Promise'
+    },
+    json: true
+  };
+  return rp(options)
+}
+
+function breweryLookup(brewery_id) {
+  var options = {
+    uri: baseUrl +'/brewery/info/' +brewery_id,
     qs: {
       client_id: clientId,
       client_secret: clientSecret,
@@ -85,3 +144,17 @@ function beerinfoformat(beerinfo) {
   output +='Rating:' + beerinfo['rating_score'] + '\n'
   return output
 }
+
+function breweryInfoFormat(breweryInfo) {
+  var output = 'Brewery:' + breweryInfo['brewery_name'] + '\n'
+  output +='City:' + breweryInfo.location['brewery_city'] + '\n'
+  output +='State:' + breweryInfo.location['brewery_state'] + '\n'
+  output +='Country:' + breweryInfo['country_name'] + '\n'
+  output +='Rating:' + breweryInfo.rating['rating_score'] + '\n'
+  return output
+}
+
+
+
+
+
