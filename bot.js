@@ -15,7 +15,7 @@ const bot = new TelegramBot(token, {polling: true});
 
 bot.onText(/\/beer (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
-  beersearch(match, chatId)
+  beerSearch(match, chatId)
 });
 
 bot.onText(/\/brewery (.+)/, (msg, match) => {
@@ -25,8 +25,8 @@ bot.onText(/\/brewery (.+)/, (msg, match) => {
 
 // beer search, this queries the untappd /search/beer api, grabs the "bid" of top the search result (based on checkins),
 // and queries the /beer/info enpoint with the bid for the full info on the beer.
-function beersearch(match, chatId) {
-  searchbeer(match)
+function beerSearch(match, chatId) {
+  searchBeer(match)
     .then(function (body) {
       return body.response.beers.items[0].beer.bid
     })
@@ -36,15 +36,15 @@ function beersearch(match, chatId) {
     })
     .then(bid => beerLookup(bid))
       .then(function (body) {
-        var beerinfo = body.response.beer
-        return beerinfo
+        var beerInfo = body.response.beer
+        return beerInfo
       })
       .catch(function (err) {
           console.log(err)
       })
       .then(beerInfo => {
-	      bot.sendPhoto(chatId, beerinfo.beer_label_hd)
-	      bot.sendMessage(chatId, beerinfoformat(beerinfo))
+	      bot.sendPhoto(chatId, beerInfo.beer_label_hd)
+	      bot.sendMessage(chatId, beerInfoFormat(beerInfo))
       })
 };
 
@@ -73,7 +73,7 @@ function brewerySearch(match, chatId) {
 
 }
 
-function searchbeer(match) {
+function searchBeer(match) {
   var options = {
     uri: baseUrl +'/search/beer',
     qs: {
@@ -135,13 +135,13 @@ function breweryLookup(brewery_id) {
   return rp(options)
 }
 
-function beerinfoformat(beerinfo) {
-  var output = 'Name:' + beerinfo['beer_name'] + '\n'
-  output += 'Brewery:' + beerinfo.brewery['brewery_name'] + '\n'
-  output +='ABV:' + beerinfo['beer_abv'] + '\n'
-  output +='IBU:' + beerinfo['beer_ibu'] + '\n'
-  output +='Style:' + beerinfo['beer_style'] + '\n'
-  output +='Rating:' + beerinfo['rating_score'] + '\n'
+function beerInfoFormat(beerInfo) {
+  var output = 'Name:' + beerInfo['beer_name'] + '\n'
+  output += 'Brewery:' + beerInfo.brewery['brewery_name'] + '\n'
+  output +='ABV:' + beerInfo['beer_abv'] + '\n'
+  output +='IBU:' + beerInfo['beer_ibu'] + '\n'
+  output +='Style:' + beerInfo['beer_style'] + '\n'
+  output +='Rating:' + beerInfo['rating_score'] + '\n'
   return output
 }
 
