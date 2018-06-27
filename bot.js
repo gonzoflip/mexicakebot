@@ -143,6 +143,7 @@ function breweryLookup(brewery_id) {
 
 
 function movieLookup(match, chatId) {
+  console.log(match)
   var options = {
      uri: imdbBase,
      qs: {
@@ -150,6 +151,7 @@ function movieLookup(match, chatId) {
 	timeout: '30000',
 	t: match,
    },
+   console.log(options)
      json: true
   };  
    bot.sendMessage(chatId, options)
