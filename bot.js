@@ -151,9 +151,9 @@ function movieLookup(match, chatId) {
 	timeout: '30000',
 	t: match,
    },
-   console.log(options)
      json: true
-  };  
+  }; 
+   console.log(options)
    bot.sendMessage(chatId, options)
 }
 
