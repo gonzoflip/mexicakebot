@@ -176,7 +176,9 @@ function breweryInfoFormat(breweryInfo) {
   return output
 }
 
-
+bot.on('polling_error', (error) => {
+  console.log(error.code);  // => 'EFATAL'
+});
 
 
 
