@@ -7,7 +7,8 @@ const rp = require('request-promise')
 const token= process.env.TELEGRAM_TOKEN;
 const clientId= process.env.UNTAPPD_ID;
 const clientSecret= process.env.UNTAPPD_SECRET;
-
+const imdbSecret= process.env.IMDB_SECRET;
+      
 const baseUrl= 'https://api.untappd.com/v4'
 
 const bot = new TelegramBot(token, {polling: true});
@@ -21,6 +22,11 @@ bot.onText(/\/beer (.+)/, (msg, match) => {
 bot.onText(/\/brewery (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
   brewerySearch(match, chatId)
+});
+
+bot.onText(/\/movie (.+)/, (msg, match) => {
+  const chatId = msg.chat.id;
+  movieSearch(match, chatId)
 });
 
 // beer search, this queries the untappd /search/beer api, grabs the "bid" of top the search result (based on checkins),
@@ -134,6 +140,19 @@ function breweryLookup(brewery_id) {
   };
   return rp(options)
 }
+
+
+function movieLookup(match, chatId) {
+  var movieData = {
+    imdb.get(
+	name: match, 
+	{apiKey:imdbToken , timeout: 30000}
+	),
+    .then(bot.sendMessage(chatId, movieData.Year))
+  }
+}
+
+
 
 function beerInfoFormat(beerInfo) {
   var output = 'Name:' + beerInfo['beer_name'] + '\n'
