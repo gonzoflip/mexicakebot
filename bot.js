@@ -7,7 +7,7 @@ const rp = require('request-promise')
 const token= process.env.TELEGRAM_TOKEN;
 const clientId= process.env.UNTAPPD_ID;
 const clientSecret= process.env.UNTAPPD_SECRET;
-const imdbSecret= process.env.IMDB_SECRET;
+const imdbToken= process.env.IMDB_SECRET;
       
 const baseUrl= 'https://api.untappd.com/v4'
 
