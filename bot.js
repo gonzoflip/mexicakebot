@@ -152,9 +152,9 @@ function movieLookup(match, chatId) {
 	t: match,
    },
      json: true
-  }; 
-   console.log(options)
-   bot.sendMessage(chatId, options)
+   }; 
+   rp(options)
+   bot.sendMessage(chatId)
 }
 
 
