@@ -27,6 +27,9 @@ bot.onText(/\/brewery (.+)/, (msg, match) => {
 bot.onText(/\/movie (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
   movieSearch(match, chatId)
+    .then(function (body) {
+       bot.sendMessage(chatId, body)
+  })
 });
 
 // beer search, this queries the untappd /search/beer api, grabs the "bid" of top the search result (based on checkins),
@@ -153,8 +156,7 @@ function movieLookup(match, chatId) {
    },
      json: true
    }; 
-   rp(options)
-   bot.sendMessage(chatId)
+   return rp(options)
 }
 
 
