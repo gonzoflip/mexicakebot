@@ -10,7 +10,7 @@ const clientSecret= process.env.UNTAPPD_SECRET;
 const imdbToken= process.env.IMDB_TOKEN;
       
 const baseUrl= 'https://api.untappd.com/v4'
-
+const imdbBase= 'http://http://www.omdbapi.com/'
 const bot = new TelegramBot(token, {polling: true});
 
 
@@ -148,11 +148,11 @@ function movieLookup(match, chatId) {
      qs: {
 	apiKey: imdbToken ,
 	timeout: '30000',
-	t : match,
-     },
+	t: match,
+   },
      json: true
   };  
-  .then(bot.sendMessage(chatId, movieData))
+   bot.sendMessage(chatId, options)
 }
 
 
