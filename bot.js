@@ -143,16 +143,16 @@ function breweryLookup(brewery_id) {
 
 
 function movieLookup(match, chatId) {
-  var movieData = {
+  var options = {
      uri: imdbBase,
      qs: {
 	apiKey: imdbToken ,
 	timeout: '30000',
 	t : match,
      },
-    json: true
-    .then(bot.sendMessage(chatId, movieData.Year))
-  }
+     json: true
+  };  
+  .then(bot.sendMessage(chatId, movieData))
 }
 
 
