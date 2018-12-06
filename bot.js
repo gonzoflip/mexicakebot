@@ -1,18 +1,16 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const rp = require('request-promise')
-
+const fs = require('fs')
+const http = require('https')
+const cmd = require('node-cmd')
 
 // create a .env with TELEGRAM_TOKEN, CLIENT_ID, and CLIENT_SECRET defined in it
 const token= process.env.TELEGRAM_TOKEN;
 const clientId= process.env.UNTAPPD_ID;
 const clientSecret= process.env.UNTAPPD_SECRET;
-const imdbToken= process.env.IMDB_TOKEN;
-      
 const baseUrl= 'https://api.untappd.com/v4'
-const imdbBase= 'http://http://www.omdbapi.com/'
 const bot = new TelegramBot(token, {polling: true});
-
 
 bot.onText(/\/beer (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
@@ -24,13 +22,49 @@ bot.onText(/\/brewery (.+)/, (msg, match) => {
   brewerySearch(match, chatId)
 });
 
-bot.onText(/\/movie (.+)/, (msg, match) => {
+bot.onText(/\/lenny/, (msg) => {
   const chatId = msg.chat.id;
-  movieSearch(match, chatId)
-    .then(function (body) {
-       bot.sendMessage(chatId, body)
-  })
+  bot.sendMessage(chatId, randLenny())
 });
+
+bot.onText(/\/boomer/, (msg) => {
+  const chatId = msg.chat.id;
+  const image =  'boomer';
+  bot.sendPhoto(chatId, randImage(image))
+});
+
+bot.onText(/\/pepe/, (msg) => {
+  const chatId = msg.chat.id;
+  const image = 'pepe';
+  bot.sendPhoto(chatId, randImage(image))
+});
+
+bot.on('message', function (message) {
+      if (message.photo != undefined){
+                bot.getFile(message.photo.slice(-1)[0].file_id).then(function (fileData) {
+                              var downloadUrl = 'https://api.telegram.org/file/bot' + token + '/' + fileData.file_path;
+                              var FileName = '/srv/' + fileData.file_path;
+                              var file = fs.createWriteStream(FileName);
+                              var request = http.get(downloadUrl, function(response) {
+                                                response.pipe(file);
+                                            });
+                              console.log(downloadUrl);
+                          });
+            }
+});
+
+bot.onText(/\/deepfry/, (msg) => {
+   const chatId = msg.chat.id;
+   const photosPath = '/srv/photos/';
+   const photoList = fs.readdirSync(photosPath)
+   const revPhoto = photoList.reverse()
+   const command = '/usr/local/bin/python3.6 /home/gonzoflip/deeppyer/deeppyer.py -t d7c38608954c412eaa148ecc3bfd74dc -o /srv/photos/deepfry.jpg ' + photosPath + revPhoto[0]
+   cmd.get(command, function(){
+     bot.sendPhoto(chatId, photosPath + 'deepfry.jpg')
+   })
+});
+
+
 
 // beer search, this queries the untappd /search/beer api, grabs the "bid" of top the search result (based on checkins),
 // and queries the /beer/info enpoint with the bid for the full info on the beer.
@@ -144,23 +178,6 @@ function breweryLookup(brewery_id) {
   return rp(options)
 }
 
-
-function movieLookup(match, chatId) {
-  console.log(match)
-  var options = {
-     uri: imdbBase,
-     qs: {
-	apiKey: imdbToken ,
-	timeout: '30000',
-	t: match,
-   },
-     json: true
-   }; 
-   return rp(options)
-}
-
-
-
 function beerInfoFormat(beerInfo) {
   var output = 'Name:' + beerInfo['beer_name'] + '\n'
   output += 'Brewery:' + beerInfo.brewery['brewery_name'] + '\n'
@@ -180,5 +197,19 @@ function breweryInfoFormat(breweryInfo) {
   return output
 }
 
+function getRandElement(array) {
+  return array[Math.floor(Math.random()*array.length)];
+}
 
+function randLenny() {
+  const lenny = fs.readFileSync('/srv/lenny', 'utf8')
+  const lennys = lenny.split("\n");
+  return getRandElement(lennys)
+};
+
+function randImage(image) {
+  const images =  fs.readdirSync('/srv/'+image)
+  const imagePath = '/srv/' + image + '/' + getRandElement(images);
+  return imagePath
+};
 
