@@ -27,6 +27,11 @@ bot.onText(/\/lenny/, (msg) => {
   bot.sendMessage(chatId, randLenny())
 });
 
+bot.onText(/\/fle/, (msg) => {
+  const chatId = msg.chat.id;
+  bot.sendMessage(chatId, randFlenny())
+});
+
 bot.onText(/\/boomer/, (msg) => {
   const chatId = msg.chat.id;
   const image =  'boomer';
@@ -205,6 +210,12 @@ function randLenny() {
   const lenny = fs.readFileSync('/srv/lenny', 'utf8')
   const lennys = lenny.split("\n");
   return getRandElement(lennys)
+};
+
+function randFlenny() {
+  const flenny = fs.readFileSync('/srv/fatlenny', 'utf8')
+  const flennys = lenny.split("\n");
+  return getRandElement(flennys)
 };
 
 function randImage(image) {
