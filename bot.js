@@ -214,7 +214,7 @@ function randLenny() {
 
 function randFlenny() {
   const flenny = fs.readFileSync('/srv/fatlenny', 'utf8')
-  const flennys = lenny.split("\n");
+  const flennys = flenny.split("\n");
   return getRandElement(flennys)
 };
 
