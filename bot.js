@@ -209,7 +209,7 @@ function cryptoLookup(match) {
     qs: {
       function: 'CURRENCY_EXCHANGE_RATE',
       from_currency: match[1],
-	  to_currency: USD,
+	    to_currency: 'USD',
       apikey: alphaKey,
     },
     headers: {
@@ -267,7 +267,7 @@ function stockInfoFormat(stockInfo) {
 
 function cryptoInfoFormat(cryptoInfo) {
   var output = 'Token:' + cryptoInfo['2. From_Currency Name'] + '\n'
-  output +='Price:$' + cryptoInfo['5. Exchange Rate'] + '\n'
+  output +='Price:$' + parseFloat(cryptoInfo['5. Exchange Rate']) + '\n'
   return output
 }
 
