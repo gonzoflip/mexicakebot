@@ -29,8 +29,8 @@ bot.onText(/\/stock (.+)/, (msg, match) => {
   stockLookup(match)
      .then(function (body) {
        console.log(body)
-       const stockInfo = body.response."Global Quote"
-       console.log(body.response."Global Quote")
+       const stockInfo = body.response.["Global Quote"]
+       console.log(body.response.["Global Quote"])
        return stockInfo
      })
   bot.sendMessage(chatId, stockInfoFormat(stockInfo))
