@@ -33,6 +33,15 @@ bot.onText(/\/stock (.+)/, (msg, match) => {
        })
 });
 
+bot.onText(/\/crypto (.+)/, (msg, match) => {
+  const chatId = msg.chat.id;
+  cryptoLookup(match, chatId)
+    .then(function (body) {
+       const cryptoInfo = body["Realtime Currency Exchange Rate"]
+       bot.sendMessage(chatId, cryptoInfoFormat(cryptoInfo))
+       })
+});
+
 bot.onText(/\/lenny/, (msg) => {
   const chatId = msg.chat.id;
   bot.sendMessage(chatId, randLenny())
@@ -194,6 +203,23 @@ function breweryLookup(brewery_id) {
   return rp(options)
 }
 
+function cryptoLookup(match) {
+  var options = {
+    uri: alphaUrl,
+    qs: {
+      function: 'CURRENCY_EXCHANGE_RATE',
+      from_currency: match[1],
+	  to_currency: USD,
+      apikey: alphaKey,
+    },
+    headers: {
+     'User-Agent': 'Request-Promise'
+  },
+    json: true
+  };
+  return rp(options)
+}
+
 function stockLookup(match) {
   var options = {
     uri: alphaUrl,
@@ -236,6 +262,12 @@ function stockInfoFormat(stockInfo) {
   output +='Open:' + stockInfo['02. open'] + '\n'
   output +='Price:' + stockInfo['05. price'] + '\n'
   output +='Change:' + stockInfo['10. change percent'] + '\n'
+  return output
+}
+
+function cryptoInfoFormat(cryptoInfo) {
+  var output = 'Token:' + cryptoInfo['2. From_Currency Name'] + '\n'
+  output +='Price:$' + cryptoInfo['5. Exchange Rate'] + '\n'
   return output
 }
 
