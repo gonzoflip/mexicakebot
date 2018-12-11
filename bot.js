@@ -11,6 +11,8 @@ const clientId= process.env.UNTAPPD_ID;
 const clientSecret= process.env.UNTAPPD_SECRET;
 const baseUrl= 'https://api.untappd.com/v4'
 const bot = new TelegramBot(token, {polling: true});
+const alphaUrl= 'https://www.alphavantage.co/query'
+const alphaKey= process.env.ALPHA_KEY
 
 bot.onText(/\/beer (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
@@ -20,6 +22,18 @@ bot.onText(/\/beer (.+)/, (msg, match) => {
 bot.onText(/\/brewery (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
   brewerySearch(match, chatId)
+});
+
+bot.onText(/\/stock (.+)/, (msg, match) => {
+  const chatId = msg.chat.id;
+  stockLookup(match)
+     .then(function (body) {
+       console.log(body)
+       const stockInfo = body.response."Global Quote"
+       console.log(body.response."Global Quote")
+       return stockInfo
+     })
+  bot.sendMessage(chatId, stockInfoFormat(stockInfo))
 });
 
 bot.onText(/\/lenny/, (msg) => {
@@ -183,6 +197,24 @@ function breweryLookup(brewery_id) {
   return rp(options)
 }
 
+function stockLookup(match) {
+  var options = {
+    uri: alphaUrl,
+    qs: {
+      function: GLOBAL_QUOTE,
+      symbol: match[1]
+      apikey: alphaKey,
+    },
+    headers: {
+     'User-Agent': 'Request-Promise'
+  },
+    json: true
+  };
+  return rp(options)
+}
+
+
+
 function beerInfoFormat(beerInfo) {
   var output = 'Name:' + beerInfo['beer_name'] + '\n'
   output += 'Brewery:' + beerInfo.brewery['brewery_name'] + '\n'
@@ -199,6 +231,14 @@ function breweryInfoFormat(breweryInfo) {
   output +='State:' + breweryInfo.location['brewery_state'] + '\n'
   output +='Country:' + breweryInfo['country_name'] + '\n'
   output +='Rating:' + breweryInfo.rating['rating_score'] + '\n'
+  return output
+}
+
+function stockInfoFormat() {
+  var output = 'Ticker:' + stockInfo['01. symbol'] + '\n'
+  output +='Open:' + stockInfo['02. Open'] + '\n'
+  output +='Price:' + stockInfo['05. volume'] + '\n'
+  output +='Change:' + stockInfo['10. change percent'] + '\n'
   return output
 }
 
