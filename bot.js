@@ -276,13 +276,13 @@ function getRandElement(array) {
 }
 
 function randLenny() {
-  const lenny = fs.readFileSync('/srv/lenny', 'utf8')
+  const lenny = fs.readFileSync('./lib/lenny', 'utf8')
   const lennys = lenny.split("\n");
   return getRandElement(lennys)
 };
 
 function randFlenny() {
-  const flenny = fs.readFileSync('/srv/fatlenny', 'utf8')
+  const flenny = fs.readFileSync('./lib/fatlenny', 'utf8')
   const flennys = flenny.split("\n");
   return getRandElement(flennys)
 };
